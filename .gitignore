@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+venv/
+.venv/
+.env
+
+# Pytest cache
+.pytest_cache/
+
+# Pycharm project settings
+.idea/
+
+# VSCode project settings
+.vscode/
+
+# Poetry files
+poetry.toml
+
+# Application logs
+logs/
+*.log

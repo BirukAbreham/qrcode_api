@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "qrcode-api"
+version = "0.0.0"
+description = "A QRCode API"
+authors = ["Biruk Abreham <birukabreham0@gmail.com>"]
+license = "GNU"
+readme = "README.md"
+packages = [{include = "qrcode_api"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beanie = "^1.20.0"
+fastapi = "^0.100.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+uvicorn = {extras = ["standard"], version = "^0.23.1"}
+python-multipart = "^0.0.6"
+pydantic = {version = "^1.10.11", extras = ["email"]}
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
