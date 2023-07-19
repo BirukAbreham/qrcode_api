@@ -1,7 +1,5 @@
 from pydantic import BaseSettings, MongoDsn
 
-from qrcode_api import __version__
-
 # This adds support for 'mongodb+srv' connection schemas when using e.g. MongoDB Atlas
 MongoDsn.allowed_schemes.add("mongodb+srv")
 
@@ -9,7 +7,7 @@ MongoDsn.allowed_schemes.add("mongodb+srv")
 class Settings(BaseSettings):
     # Application
     PROJECT_NAME: str = "QR Code API"
-    PROJECT_VERSION: str = __version__
+    PROJECT_VERSION: str = "0.0.0"
     API_V1_STR: str = "v1"
     DEBUG: bool = True
 

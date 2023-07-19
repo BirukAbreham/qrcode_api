@@ -1,12 +1,12 @@
 import uvicorn
 
-from qrcode_api.app.core.config import settings
+from app.core.config import settings
 
 
 def run_dev_server() -> None:
     """Run the uvicorn server in development environment"""
     uvicorn.run(
-        "qrcode_api.app.main:app",
+        "app.main:app",
         host=settings.UVICORN_HOST,
         port=settings.UVICORN_PORT,
         reload=settings.DEBUG,

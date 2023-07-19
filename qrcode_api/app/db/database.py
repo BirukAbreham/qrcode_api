@@ -1,10 +1,12 @@
+import sys
 import logging
+import asyncio
 
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from qrcode_api.app.core.config import settings
-from qrcode_api.app.models import gather_documents
+from app.core.config import settings
+from app.models import gather_documents
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +40,8 @@ async def connect_and_init_db() -> None:
         logger.info(f"Connection string: {settings.MONGO_URI}/{settings.MONGO_DB}")
     except Exception as exception:
         logger.error(f"Could not connect to MongoDB", exc_info=True)
-        raise Exception("Internal Server Error")
+        asyncio.get_event_loop().close()
+        sys.exit()
 
 
 async def close_db_connect() -> None:
