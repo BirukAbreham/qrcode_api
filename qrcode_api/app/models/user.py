@@ -22,7 +22,7 @@ class User(Document):
         # Because all usernames are converted to lowercase at user creation,
         # make the given 'username' parameter also lowercase.
         return await cls.find_one(cls.username == username.lower())
-    
+
     @classmethod
     async def get_by_email(cls, *, email: str) -> Optional["User"]:
         return await cls.find_one(cls.email == email)
