@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     LOG_DIR: str
     LOG_CONFIG_FILE: str
 
+    # Superuser Configuration
+    SUPERUSER: str
+    SUPERUSER_EMAIL: str
+    SUPERUSER_PASSWORD: str
+
     class Config:
         # Place your .env file under this path
         env_file = ".env"

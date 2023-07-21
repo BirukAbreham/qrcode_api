@@ -6,7 +6,8 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.core.config import settings
-from app.models import gather_documents
+from app.core.security import get_password_hash
+from app.models import User, gather_documents
 
 
 logger = logging.getLogger(__name__)
@@ -38,6 +39,14 @@ async def connect_and_init_db() -> None:
 
         logger.info("Connected to MongoDB")
         logger.info(f"Connection string: {settings.MONGO_URI}/{settings.MONGO_DB}")
+
+        if not await User.get_by_username(username=settings.SUPERUSER):
+            await User(
+                username=settings.SUPERUSER,
+                email=settings.SUPERUSER_EMAIL,
+                hashed_password=get_password_hash(settings.SUPERUSER_PASSWORD),
+                is_superuser=True,
+            ).insert()
     except Exception as exception:
         logger.error(f"Could not connect to MongoDB", exc_info=True)
         asyncio.get_event_loop().close()

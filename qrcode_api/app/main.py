@@ -2,7 +2,6 @@ import logging
 from typing import Set
 
 from fastapi import FastAPI, status
-from fastapi.responses import ORJSONResponse
 
 from app import api
 from app.core.config import settings
@@ -36,7 +35,6 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION,
     description="QR Code API generator",
-    default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata,
     license_info={
         "name": "GNU General Public License v3.0",

@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from pydantic import BaseModel, ConstrainedStr, EmailStr
+from pydantic import BaseModel, ConstrainedStr, EmailStr, validator
 
 
 class ConstrainedUsername(ConstrainedStr):
@@ -24,6 +24,17 @@ class UserCreate(UserBase):
     username: ConstrainedUsername
     email: EmailStr
     password: str
+
+
+# Properties to sign up user
+class UserSignUp(UserCreate):
+    confirm_password: str
+
+    @validator("confirm_password")
+    def passwords_match(cls, v, values, **kwargs):
+        if "password" in values and v != values["password"]:
+            raise ValueError("Passwords do not match")
+        return v
 
 
 # Properties to receive on user update

@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import ORJSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import schemas
@@ -26,7 +25,7 @@ router = APIRouter(
 )
 async def generate_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
-) -> ORJSONResponse:
+):
     """Get an access token for future requests."""
     user = await User.authenticate(
         username=form_data.username, password=form_data.password
@@ -45,12 +44,10 @@ async def generate_access_token(
 
     expires_in = timedelta(minutes=settings.EXPIRE_MINUTES)
 
-    return ORJSONResponse(
-        content={
-            "access_token": create_access_token(user.id, expires_delta=expires_in),
-            "token_type": "bearer",
-        }
-    )
+    return {
+        "access_token": create_access_token(user.id, expires_delta=expires_in),
+        "token_type": "bearer",
+    }
 
 
 @router.post(
