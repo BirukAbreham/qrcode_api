@@ -4,6 +4,7 @@ from typing import Sequence, Type, TypeVar
 from beanie import Document
 
 from .user import User
+from .qrcode import QRCode
 
 DocType = TypeVar("DocType", bound=Document)
 

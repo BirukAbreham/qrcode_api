@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from pydantic import EmailStr
@@ -8,6 +8,7 @@ from app import schemas
 from app.api.v1.deps import get_current_active_user, get_current_active_superuser
 from app.core.security import get_password_hash
 from app.models.user import User
+from app.models.qrcode import QRCode
 from app.utils import paginate
 
 if TYPE_CHECKING:
@@ -51,6 +52,25 @@ class BasicUserViews:
     def get_current_user(self) -> User:
         """Get current active user details"""
         return self.user
+
+    @router.get("/me/qrcodes", response_model=schemas.Paginated[schemas.QRCode])
+    async def get_current_user_qrcodes(
+        self,
+        paging: schemas.PaginationParams = Depends(),
+        sorting: schemas.SortingParams = Depends(),
+    ) -> dict[str, Any]:
+        """Get current active user's qrcodes."""
+        data = await QRCode.get_by_user(
+            user_id=self.user.id,
+            paging=paging,
+            sorting=sorting,
+        )
+        return {
+            "page": paging.page,
+            "per_page": paging.per_page,
+            "total": await QRCode.find(QRCode.user_id == self.user.id).count(),
+            "data": data,
+        }
 
     @router.put("/me", response_model=schemas.User)
     async def update_current_user(

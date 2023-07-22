@@ -2,6 +2,7 @@ import logging
 from typing import Set
 
 from fastapi import FastAPI, status
+from fastapi.staticfiles import StaticFiles
 
 from app import api
 from app.core.config import settings
@@ -17,6 +18,10 @@ tags_metadata = [
     {
         "name": "Users",
         "description": "User registration and management",
+    },
+    {
+        "name": "QR Codes",
+        "description": "QR Code management",
     },
 ]
 
@@ -41,6 +46,9 @@ app = FastAPI(
         "url": "https://www.gnu.org/licenses/gpl-3.0.en.html",
     },
 )
+
+# Static file mount
+app.mount(settings.STATIC_PATH, StaticFiles(directory="static"), name="static")
 
 # Add the router responsible for all /api/ endpoint requests
 app.include_router(api.router)

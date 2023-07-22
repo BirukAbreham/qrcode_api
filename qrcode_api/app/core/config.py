@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     SUPERUSER_EMAIL: str
     SUPERUSER_PASSWORD: str
 
+    # Static File Directory
+    STATIC_PATH: str
+    STATIC_URL: str
+
     class Config:
         # Place your .env file under this path
         env_file = ".env"
