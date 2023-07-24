@@ -7,6 +7,7 @@ import segno
 from segno import helpers
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import FileResponse
 from fastapi_utils.cbv import cbv
 
 from app import schemas
@@ -41,14 +42,14 @@ class BasicUserViews:
 
     @router.post("/", response_model=schemas.QRCode)
     async def basic_qrcode(self, payload: schemas.QRCodeBasicCreate) -> QRCode:
-        file_name = self.generate_random_str()
+        file_name = f"{self.generate_random_str()}.{payload.file_format}"
         return await self.__generate_qrcode(
             file_name=file_name, data=payload.data, payload=payload
         )
 
     @router.post("/location", response_model=schemas.QRCode)
     async def location_qrcode(self, payload: schemas.QRCodeLocationCreate) -> QRCode:
-        file_name = self.generate_random_str()
+        file_name = f"{self.generate_random_str()}.{payload.file_format}"
         geo_uri = helpers.make_geo_data(lat=payload.latitude, lng=payload.longitude)
         return await self.__generate_qrcode(
             file_name=file_name, data=geo_uri, payload=payload
@@ -56,7 +57,7 @@ class BasicUserViews:
 
     @router.post("/wifi", response_model=schemas.QRCode)
     async def wifi_qrcode(self, payload: schemas.QRCodeWiFiCreate) -> QRCode:
-        file_name = self.generate_random_str()
+        file_name = f"{self.generate_random_str()}.{payload.file_format}"
         wifi_data = helpers.make_wifi_data(
             ssid=payload.ssid, password=payload.password, security=payload.security
         )
@@ -65,11 +66,12 @@ class BasicUserViews:
         )
 
     @router.post("/vCard", response_model=schemas.QRCode)
-    async def vCard_qrcode(self, payload: schemas.QRCodeVCardCreate) -> QRCode:
-        file_name = self.generate_random_str()
+    async def vCard_qrcode(self, payload: schemas.QRCodeContactCardCreate) -> QRCode:
+        file_name = f"{self.generate_random_str()}.{payload.file_format}"
         vCard_data = helpers.make_vcard_data(
             name=payload.name,
             displayname=payload.displayname,
+            phone=payload.phone_number,
             email=payload.email,
             url=payload.url,
         )
@@ -77,18 +79,31 @@ class BasicUserViews:
             file_name=file_name, data=vCard_data, payload=payload
         )
 
+    @router.post("/meCard", response_model=schemas.QRCode)
+    async def meCard_qrcode(self, payload: schemas.QRCodeContactCardCreate) -> QRCode:
+        file_name = f"{self.generate_random_str()}.{payload.file_format}"
+        meCard_data = helpers.make_mecard_data(
+            name=payload.name,
+            phone=payload.phone_number,
+            email=payload.email,
+            url=payload.url,
+        )
+        return await self.__generate_qrcode(
+            file_name=file_name, data=meCard_data, payload=payload
+        )
+
     async def __generate_qrcode(self, file_name, data, payload) -> QRCode:
         try:
             qrcode = segno.make(data, micro=payload.micro, error=payload.error_level)
             qrcode.save(
-                f"{settings.STATIC_PATH}/{file_name}.{payload.file_format}",
+                f"{settings.STATIC_PATH}/{file_name}",
                 scale=payload.scale,
                 border=payload.border,
                 dark=payload.dark.as_hex(),
                 light=payload.light.as_hex(),
             )
             new_qrcode = await QRCode(
-                qrcode_url=f"{settings.STATIC_URL}{file_name}.{payload.file_format}",
+                qrcode_url=f"{settings.STATIC_URL}/{file_name}",
                 user_id=self.user.id,
             ).insert()
             return schemas.QRCode(**new_qrcode.dict())
@@ -120,3 +135,8 @@ class SuperuserViews:
             raise qrcode_not_found()
 
         await qrcode.delete()
+
+
+@router.get("/{qrcode_file_name}", response_class=FileResponse)
+async def fetch_qrcode_file(qrcode_file_name: str):
+    return FileResponse(f"{settings.STATIC_PATH}/{qrcode_file_name}")

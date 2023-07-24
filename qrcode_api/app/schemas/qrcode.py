@@ -2,8 +2,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
+import phonenumbers
 from beanie import PydanticObjectId
-from pydantic import AnyUrl, BaseModel, EmailStr, HttpUrl
+from pydantic import AnyUrl, BaseModel, EmailStr, HttpUrl, validator
 from pydantic.color import Color
 
 
@@ -57,11 +58,20 @@ class QRCodeLocationCreate(IQRCodeCreate):
     longitude: float
 
 
-class QRCodeVCardCreate(IQRCodeCreate):
+class QRCodeContactCardCreate(IQRCodeCreate):
     name: str
     displayname: str
+    phone_number: str
     email: list[EmailStr]
     url: list[HttpUrl]
+
+    @validator("phone_number")
+    def is_valid_phone_number(cls, value):
+        try:
+            parsed_phone = phonenumbers.parse(value)
+            return value
+        except Exception as error:
+            raise ValueError("Phone number is not a valid format")
 
 
 class QRCode(BaseModel):

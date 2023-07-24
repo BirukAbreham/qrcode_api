@@ -6,6 +6,6 @@ from .qrcode import (
     QRCode,
     QRCodeBasicCreate,
     QRCodeLocationCreate,
-    QRCodeVCardCreate,
+    QRCodeContactCardCreate,
     QRCodeWiFiCreate,
 )
