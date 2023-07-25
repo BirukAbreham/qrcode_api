@@ -4,7 +4,7 @@ from typing import Any
 
 import phonenumbers
 from beanie import PydanticObjectId
-from pydantic import AnyUrl, BaseModel, EmailStr, HttpUrl, validator
+from pydantic import BaseModel, EmailStr, HttpUrl, validator
 from pydantic.color import Color
 
 
@@ -75,7 +75,7 @@ class QRCodeContactCardCreate(IQRCodeCreate):
 
 
 class QRCode(BaseModel):
-    qrcode_url: AnyUrl
+    qrcode_file: str
     created_at: datetime
     user_id: PydanticObjectId
 

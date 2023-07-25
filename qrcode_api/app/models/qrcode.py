@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class QRCode(Document):
-    qrcode_url: Optional[str] = None
+    qrcode_file: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     user_id: Optional[PydanticObjectId] = None
 
@@ -32,6 +32,10 @@ class QRCode(Document):
     @classmethod
     async def get_by_id(cls, *, qrcode_id: PydanticObjectId) -> Optional["QRCode"]:
         return await cls.find_one(cls.id == qrcode_id)
+
+    @classmethod
+    async def get_by_file_name(cls, *, file_name: str) -> Optional["QRCode"]:
+        return await cls.find_one(cls.qrcode_file == file_name)
 
     class Settings:
         name = "qr_codes"
