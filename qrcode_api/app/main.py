@@ -4,10 +4,10 @@ from typing import Set
 from fastapi import FastAPI, status
 from fastapi.staticfiles import StaticFiles
 
-from app import api
-from app.core.config import settings
-from app.core.logging import setup_logging
-from app.db.database import connect_and_init_db, close_db_connect
+from qrcode_api.app import api
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.core.logging import setup_logging
+from qrcode_api.app.db.database import connect_and_init_db, close_db_connect
 
 
 tags_metadata = [

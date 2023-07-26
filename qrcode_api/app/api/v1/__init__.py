@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, users, qrcodes
-from app.core.config import settings
+from qrcode_api.app.api.v1.endpoints import auth, users, qrcodes
+from qrcode_api.app.core.config import settings
 
 router = APIRouter(prefix=f"/{settings.API_V1_STR}")
 

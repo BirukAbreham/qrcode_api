@@ -5,13 +5,13 @@ from fastapi import APIRouter, Body, Depends, HTTPException, status
 from pydantic import EmailStr
 from fastapi_utils.cbv import cbv
 
-from app import schemas
-from app.api.v1.deps import get_current_active_user, get_current_active_superuser
-from app.core.config import settings
-from app.core.security import get_password_hash
-from app.models.user import User
-from app.models.qrcode import QRCode
-from app.utils import paginate
+from qrcode_api.app import schemas
+from qrcode_api.app.api.v1.deps import get_current_active_user, get_current_active_superuser
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.core.security import get_password_hash
+from qrcode_api.app.models.user import User
+from qrcode_api.app.models.qrcode import QRCode
+from qrcode_api.app.utils import paginate
 
 if TYPE_CHECKING:
     from app.utils.types import PaginationDict

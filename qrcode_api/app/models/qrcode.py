@@ -5,7 +5,7 @@ from beanie import Document, PydanticObjectId
 from pydantic.fields import Field
 
 if TYPE_CHECKING:
-    from app.schemas import PaginationParams, SortingParams
+    from qrcode_api.app.schemas import PaginationParams, SortingParams
 
 
 class QRCode(Document):

@@ -5,7 +5,7 @@ description = "A QRCode API"
 authors = ["Biruk Abreham <birukabreham0@gmail.com>"]
 license = "GNU"
 readme = "README.md"
-packages = [{include = "qrcode_api"}]
+# packages = [{include = "qrcode_api"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

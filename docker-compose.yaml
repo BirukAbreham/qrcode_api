@@ -8,7 +8,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb-data: /data/db
+      - mongodb-data:/data/db
     restart: always
   
   backend:
@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - .env.docker
     ports:
       - ${QR_CODE_API_UVICORN_PORT}:${QR_CODE_API_UVICORN_PORT}
     restart: always
