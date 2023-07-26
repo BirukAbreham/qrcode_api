@@ -19,7 +19,7 @@ services:
     env_file:
       - .env.docker
     ports:
-      - ${QR_CODE_API_UVICORN_PORT}:${QR_CODE_API_UVICORN_PORT}
+      - 9999:9999
     restart: always
 
 volumes:

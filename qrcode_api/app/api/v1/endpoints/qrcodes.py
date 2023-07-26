@@ -111,7 +111,7 @@ class BasicUserViews:
             logger.error("QR Code serialization failure", exc_info=True)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Internal Server Error",
+                detail=f"QR Code serialization failure",
             )
 
 

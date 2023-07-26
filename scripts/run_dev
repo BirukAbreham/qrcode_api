@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+uvicorn qrcode_api.app.main:app \
+    --port 8888 \
+    --log-config logging-dev.yaml \
+    --reload \
+    --reload-exclude logs/qrcode_api.log \
+    --use-colors 
