@@ -1,15 +1,17 @@
+import os
 from typing import TYPE_CHECKING, Any
 
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from pydantic import EmailStr
 from fastapi_utils.cbv import cbv
 
-from app import schemas
-from app.api.v1.deps import get_current_active_user, get_current_active_superuser
-from app.core.security import get_password_hash
-from app.models.user import User
-from app.models.qrcode import QRCode
-from app.utils import paginate
+from qrcode_api.app import schemas
+from qrcode_api.app.api.v1.deps import get_current_active_user, get_current_active_superuser
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.core.security import get_password_hash
+from qrcode_api.app.models.user import User
+from qrcode_api.app.models.qrcode import QRCode
+from qrcode_api.app.utils import paginate
 
 if TYPE_CHECKING:
     from app.utils.types import PaginationDict
@@ -53,6 +55,23 @@ class BasicUserViews:
         """Get current active user details"""
         return self.user
 
+    @router.put("/me", response_model=schemas.User)
+    async def update_current_user(
+        self,
+        password: str | None = Body(None),
+        email: EmailStr | None = Body(None),
+    ) -> User:
+        """Update current user using provided data."""
+        if password is not None:
+            self.user.hashed_password = get_password_hash(password)
+
+        if email is not None:
+            self.user.email = email
+
+        await self.user.save_changes()
+
+        return self.user
+
     @router.get("/me/qrcodes", response_model=schemas.Paginated[schemas.QRCode])
     async def get_current_user_qrcodes(
         self,
@@ -72,22 +91,27 @@ class BasicUserViews:
             "data": data,
         }
 
-    @router.put("/me", response_model=schemas.User)
-    async def update_current_user(
-        self,
-        password: str | None = Body(None),
-        email: EmailStr | None = Body(None),
-    ) -> User:
-        """Update current user using provided data."""
-        if password is not None:
-            self.user.hashed_password = get_password_hash(password)
+    @router.delete(
+        "/me/qrcodes/{qrcode_file_name}", status_code=status.HTTP_204_NO_CONTENT
+    )
+    async def delete_qrcode(self, qrcode_file_name: str) -> None:
+        qrcode = await QRCode.get_by_file_name(file_name=qrcode_file_name)
+        if not qrcode:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="QRCode with the file name cannot be found",
+            )
+        if qrcode.user_id != self.user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="The user doesn't have enough privileges",
+            )
 
-        if email is not None:
-            self.user.email = email
+        file_name = f"{settings.STATIC_PATH}/{qrcode.qrcode_file}"
+        if os.path.isfile(file_name):
+            os.remove(file_name)
 
-        await self.user.save_changes()
-
-        return self.user
+        await qrcode.delete()
 
 
 @cbv(router)

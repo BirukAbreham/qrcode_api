@@ -3,11 +3,11 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app import schemas
-from app.core.config import settings
-from app.core.security import create_access_token, create_api_key
-from app.api.v1.deps import get_current_active_user
-from app.models import User
+from qrcode_api.app import schemas
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.core.security import create_access_token, create_api_key
+from qrcode_api.app.api.v1.deps import get_current_active_user
+from qrcode_api.app.models import User
 
 router = APIRouter(
     responses={

@@ -5,7 +5,7 @@ description = "A QRCode API"
 authors = ["Biruk Abreham <birukabreham0@gmail.com>"]
 license = "GNU"
 readme = "README.md"
-packages = [{include = "qrcode_api"}]
+# packages = [{include = "qrcode_api"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -19,6 +19,7 @@ pydantic = {version = "^1.10.11", extras = ["email"]}
 fastapi-utils = "^0.2.1"
 segno = "^1.5.2"
 phonenumbers = "^8.13.17"
+pillow = "^10.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

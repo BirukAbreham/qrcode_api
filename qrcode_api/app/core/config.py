@@ -37,7 +37,6 @@ class Settings(BaseSettings):
 
     # Static File Directory
     STATIC_PATH: str
-    STATIC_URL: str
 
     class Config:
         # Place your .env file under this path

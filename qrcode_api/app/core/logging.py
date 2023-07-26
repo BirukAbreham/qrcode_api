@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from app.core.config import settings
+from qrcode_api.app.core.config import settings
 
 LOG_DIR = settings.LOG_DIR
 LOG_CONFIG_FILE = settings.LOG_CONFIG_FILE

@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Type, TypeVar
 
 from beanie import Document
 
-from app.utils.types import PaginationDict
+from qrcode_api.app.utils.types import PaginationDict
 
 
 if TYPE_CHECKING:

@@ -5,7 +5,7 @@ from beanie import Document, Indexed
 from pydantic import EmailStr
 from pydantic.fields import Field
 
-from app.core.security import create_api_key, verify_password
+from qrcode_api.app.core.security import create_api_key, verify_password
 
 
 class User(Document):

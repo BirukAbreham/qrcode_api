@@ -5,9 +5,9 @@ import asyncio
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from app.core.config import settings
-from app.core.security import get_password_hash
-from app.models import User, gather_documents
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.core.security import get_password_hash
+from qrcode_api.app.models import User, gather_documents
 
 
 logger = logging.getLogger(__name__)

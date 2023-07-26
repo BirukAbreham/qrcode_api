@@ -7,9 +7,9 @@ from fastapi import Depends, status
 from fastapi.exceptions import HTTPException
 from fastapi.security import APIKeyQuery, OAuth2PasswordBearer
 
-from app import schemas
-from app.core.config import settings
-from app.models import User
+from qrcode_api.app import schemas
+from qrcode_api.app.core.config import settings
+from qrcode_api.app.models import User
 
 
 bearer_token = OAuth2PasswordBearer(
