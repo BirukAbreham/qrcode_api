@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     API_V1_STR: str = "v1"
     DEBUG: bool = True
 
+    # CORS Origin configurations
+    CORS_ORIGINS: list[str] = []
+
     # Development Settings
     UVICORN_HOST: str
     UVICORN_PORT: int

@@ -40,6 +40,9 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION,
     description="QR Code API generator",
+    openapi_url=f"/api/{settings.API_V1_STR}/openapi.json",
+    docs_url=f"/api/{settings.API_V1_STR}/docs",
+    redoc_url=f"/api/{settings.API_V1_STR}/redoc",
     openapi_tags=tags_metadata,
     license_info={
         "name": "GNU General Public License v3.0",
@@ -52,6 +55,18 @@ app.mount(settings.STATIC_PATH, StaticFiles(directory="static"), name="static")
 
 # Add the router responsible for all /api/ endpoint requests
 app.include_router(api.router)
+
+# Set all CORS enabled origins
+if settings.CORS_ORIGINS:
+    from fastapi.middleware.cors import CORSMiddleware
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Setup logging configuration
 setup_logging()

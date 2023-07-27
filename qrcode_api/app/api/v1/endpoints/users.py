@@ -6,7 +6,10 @@ from pydantic import EmailStr
 from fastapi_utils.cbv import cbv
 
 from qrcode_api.app import schemas
-from qrcode_api.app.api.v1.deps import get_current_active_user, get_current_active_superuser
+from qrcode_api.app.api.v1.deps import (
+    get_current_active_user,
+    get_current_active_superuser,
+)
 from qrcode_api.app.core.config import settings
 from qrcode_api.app.core.security import get_password_hash
 from qrcode_api.app.models.user import User
@@ -26,7 +29,9 @@ def user_not_found_error() -> HTTPException:
     )
 
 
-@router.post("/signup", response_model=schemas.User)
+@router.post(
+    "/signup", response_model=schemas.User, status_code=status.HTTP_201_CREATED
+)
 async def sign_up_user(user_sign_up: schemas.UserSignUp) -> User:
     """Sign up a user into the database."""
     user = await User.get_by_username(username=user_sign_up.username)

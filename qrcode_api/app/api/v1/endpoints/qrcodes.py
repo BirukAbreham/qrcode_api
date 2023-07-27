@@ -11,7 +11,10 @@ from fastapi.responses import FileResponse
 from fastapi_utils.cbv import cbv
 
 from qrcode_api.app import schemas
-from qrcode_api.app.api.v1.deps import get_current_active_user, get_current_active_superuser
+from qrcode_api.app.api.v1.deps import (
+    get_current_active_user,
+    get_current_active_superuser,
+)
 from qrcode_api.app.core.config import settings
 from qrcode_api.app.models.user import User
 from qrcode_api.app.models.qrcode import QRCode
@@ -40,14 +43,18 @@ class BasicUserViews:
     def generate_random_str() -> str:
         return md5(secrets.token_bytes(32)).hexdigest()
 
-    @router.post("/", response_model=schemas.QRCode)
+    @router.post(
+        "/", response_model=schemas.QRCode, status_code=status.HTTP_201_CREATED
+    )
     async def basic_qrcode(self, payload: schemas.QRCodeBasicCreate) -> QRCode:
         file_name = f"{self.generate_random_str()}.{payload.file_format}"
         return await self.__generate_qrcode(
             file_name=file_name, data=payload.data, payload=payload
         )
 
-    @router.post("/location", response_model=schemas.QRCode)
+    @router.post(
+        "/location", response_model=schemas.QRCode, status_code=status.HTTP_201_CREATED
+    )
     async def location_qrcode(self, payload: schemas.QRCodeLocationCreate) -> QRCode:
         file_name = f"{self.generate_random_str()}.{payload.file_format}"
         geo_uri = helpers.make_geo_data(lat=payload.latitude, lng=payload.longitude)
@@ -55,7 +62,9 @@ class BasicUserViews:
             file_name=file_name, data=geo_uri, payload=payload
         )
 
-    @router.post("/wifi", response_model=schemas.QRCode)
+    @router.post(
+        "/wifi", response_model=schemas.QRCode, status_code=status.HTTP_201_CREATED
+    )
     async def wifi_qrcode(self, payload: schemas.QRCodeWiFiCreate) -> QRCode:
         file_name = f"{self.generate_random_str()}.{payload.file_format}"
         wifi_data = helpers.make_wifi_data(
@@ -65,7 +74,9 @@ class BasicUserViews:
             file_name=file_name, data=wifi_data, payload=payload
         )
 
-    @router.post("/vCard", response_model=schemas.QRCode)
+    @router.post(
+        "/vCard", response_model=schemas.QRCode, status_code=status.HTTP_201_CREATED
+    )
     async def vCard_qrcode(self, payload: schemas.QRCodeContactCardCreate) -> QRCode:
         file_name = f"{self.generate_random_str()}.{payload.file_format}"
         vCard_data = helpers.make_vcard_data(
@@ -79,7 +90,9 @@ class BasicUserViews:
             file_name=file_name, data=vCard_data, payload=payload
         )
 
-    @router.post("/meCard", response_model=schemas.QRCode)
+    @router.post(
+        "/meCard", response_model=schemas.QRCode, status_code=status.HTTP_201_CREATED
+    )
     async def meCard_qrcode(self, payload: schemas.QRCodeContactCardCreate) -> QRCode:
         file_name = f"{self.generate_random_str()}.{payload.file_format}"
         meCard_data = helpers.make_mecard_data(
@@ -133,7 +146,7 @@ class SuperuserViews:
 
         if not qrcode:
             raise qrcode_not_found()
-        
+
         file_name = f"{settings.STATIC_PATH}/{qrcode.qrcode_file}"
         if os.path.isfile(file_name):
             os.remove(file_name)
